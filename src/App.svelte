@@ -1,15 +1,44 @@
-<script>
+<script lang="ts">
   import Header from "./components/Header.svelte";
   import Footer from "./components/Footer.svelte";
   import Tabs from "./shared/Tabs.svelte";
   import CreatePollForm from "./components/CreatePollForm.svelte";
+  import { PollModel } from "./models/poll.model";
+  import { TabOptions } from "./constants/tab-options.enum";
+  import PollList from "./components/PollList.svelte";
 
   // Tabs
-  let tabs = ["Current Polls", "Add New Poll"];
-  let activeTab = "Add New Poll";
+  let tabs = [TabOptions.CurrentPolls, TabOptions.AddNewPoll];
+  let activeTab = TabOptions.CurrentPolls;
 
   const onTabChange = (e) => {
     activeTab = e.detail;
+  };
+
+  // Polls
+  let polls: Array<PollModel> = [
+    {
+      id: 1,
+      question: "Python or Javascript",
+      answerA: "Python",
+      answerB: "Javascript",
+      votesA: 9,
+      votesB: 15,
+    },
+    {
+      id: 2,
+      question: "Bones or No Bones?",
+      answerA: "Bones",
+      answerB: "No Bones",
+      votesA: 9,
+      votesB: 15,
+    },
+  ];
+
+  const onAddPoll = (e) => {
+    const nextPoll: PollModel = e.detail;
+    polls = [...polls, nextPoll];
+    activeTab = TabOptions.CurrentPolls;
   };
 </script>
 
@@ -18,9 +47,9 @@
   <Tabs {tabs} {activeTab} on:tabChange={onTabChange} />
 
   {#if activeTab === "Current Polls"}
-    <p>Poll list Component</p>
+    <PollList {polls}></PollList>
   {:else if activeTab === "Add New Poll"}
-    <CreatePollForm />
+    <CreatePollForm on:addPoll={onAddPoll} />
   {/if}
 </main>
 <Footer />
