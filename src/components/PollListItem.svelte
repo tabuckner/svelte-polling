@@ -1,21 +1,32 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import PollStore from "../stores/PollStore";
   import { PollModel } from "../models/poll.model";
   import Card from "../shared/Card.svelte";
-
-  const dispatch = createEventDispatcher();
 
   export let poll: PollModel;
 
   // Reactive Values
   $: totalVotes = poll.votesA + poll.votesB;
   $: widths = {
-    a: poll.votesA / totalVotes * 100,
-    b: poll.votesB / totalVotes * 100,
+    a: (poll.votesA / totalVotes) * 100,
+    b: (poll.votesB / totalVotes) * 100,
   };
 
   const onClickAnswer = (option: string, id: number) => {
-    dispatch("vote", { option, id });
+    PollStore.update((currentPolls) => {
+      let nextPolls = [...currentPolls];
+
+      let votedPoll = nextPolls.find((poll) => poll.id === id);
+
+      if (option === "a") {
+        votedPoll.votesA++;
+      }
+      if (option === "b") {
+        votedPoll.votesB++;
+      }
+
+      return [...nextPolls];
+    });
   };
 </script>
 
