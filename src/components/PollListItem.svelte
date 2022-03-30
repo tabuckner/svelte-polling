@@ -3,15 +3,22 @@
   import { PollModel } from "../models/poll.model";
   import Card from "../shared/Card.svelte";
   import Button from "../shared/Button.svelte";
+  import { tweened } from 'svelte/motion'
 
   export let poll: PollModel;
 
   // Reactive Values
   $: totalVotes = poll.votesA + poll.votesB;
   $: widths = {
-    a: (poll.votesA / totalVotes) * 100,
-    b: (poll.votesB / totalVotes) * 100,
+    a: (poll.votesA / totalVotes) * 100 || 0,
+    b: (poll.votesB / totalVotes) * 100 || 0,
   };
+
+  const tweenedA = tweened(0);
+  const tweenedB = tweened(0);
+  $: tweenedA.set(widths.a);
+  $: tweenedB.set(widths.b);
+  $: console.warn($tweenedA, $tweenedB);
 
   const onClickAnswer = (option: string, id: number) => {
     PollStore.update((currentPolls) => {
@@ -42,11 +49,11 @@
     <h3>{poll.question}</h3>
     <p>Total Votes {totalVotes}</p>
     <div class="answer" on:click={() => onClickAnswer("a", poll.id)}>
-      <div class="percent percent-a" style="width: {widths.a}%" />
+      <div class="percent percent-a" style="width: {$tweenedA}%" />
       <span>{poll.answerA} ({poll.votesA})</span>
     </div>
     <div class="answer" on:click={() => onClickAnswer("b", poll.id)}>
-      <div class="percent percent-b" style="width: {widths.b}%" />
+      <div class="percent percent-b" style="width: {$tweenedB}%" />
       <span>{poll.answerB} ({poll.votesB})</span>
     </div>
     <div class="delete">
