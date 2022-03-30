@@ -40,6 +40,22 @@
     polls = [...polls, nextPoll];
     activeTab = TabOptions.CurrentPolls;
   };
+
+  const onVote = (e) => {
+    const { option, id } = e.detail;
+    let nextPolls = [...polls];
+
+    let votedPoll = nextPolls.find((poll) => poll.id === id);
+
+    if (option === "a") {
+      votedPoll.votesA++;
+    }
+    if (option === "b") {
+      votedPoll.votesB++;
+    }
+
+    polls = [...nextPolls];
+  };
 </script>
 
 <Header />
@@ -47,7 +63,7 @@
   <Tabs {tabs} {activeTab} on:tabChange={onTabChange} />
 
   {#if activeTab === "Current Polls"}
-    <PollList {polls}></PollList>
+    <PollList {polls} on:vote={onVote} />
   {:else if activeTab === "Add New Poll"}
     <CreatePollForm on:addPoll={onAddPoll} />
   {/if}
