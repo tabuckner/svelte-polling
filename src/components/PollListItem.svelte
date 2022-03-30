@@ -1,5 +1,6 @@
 <script lang="ts">
   import { PollModel } from "../models/poll.model";
+  import Card from "../shared/Card.svelte";
 
   export let poll: PollModel;
 
@@ -7,18 +8,20 @@
   $: totalVotes = poll.votesA + poll.votesB;
 </script>
 
-<div class="poll-list-item">
-  <h3>{poll.question}</h3>
-  <p>Total Votes {totalVotes}</p>
-  <div class="answer">
-    <div class="percent percent-a" />
-    <span>{poll.answerA} ({poll.votesA})</span>
+<Card>
+  <div class="poll-list-item">
+    <h3>{poll.question}</h3>
+    <p>Total Votes {totalVotes}</p>
+    <div class="answer">
+      <div class="percent percent-a" />
+      <span>{poll.answerA} ({poll.votesA})</span>
+    </div>
+    <div class="answer">
+      <div class="percent percent-b" />
+      <span>{poll.answerB} ({poll.votesB})</span>
+    </div>
   </div>
-  <div class="answer">
-    <div class="percent percent-b" />
-    <span>{poll.answerB} ({poll.votesB})</span>
-  </div>
-</div>
+</Card>
 
 <style>
   h3 {

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let type = "primary";
   export let flat = false;
   export let inverse = false;
