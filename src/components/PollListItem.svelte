@@ -9,6 +9,10 @@
 
   // Reactive Values
   $: totalVotes = poll.votesA + poll.votesB;
+  $: widths = {
+    a: poll.votesA / totalVotes * 100,
+    b: poll.votesB / totalVotes * 100,
+  };
 
   const onClickAnswer = (option: string, id: number) => {
     dispatch("vote", { option, id });
@@ -20,11 +24,11 @@
     <h3>{poll.question}</h3>
     <p>Total Votes {totalVotes}</p>
     <div class="answer" on:click={() => onClickAnswer("a", poll.id)}>
-      <div class="percent percent-a" />
+      <div class="percent percent-a" style="width: {widths.a}%" />
       <span>{poll.answerA} ({poll.votesA})</span>
     </div>
     <div class="answer" on:click={() => onClickAnswer("b", poll.id)}>
-      <div class="percent percent-b" />
+      <div class="percent percent-b" style="width: {widths.b}%" />
       <span>{poll.answerB} ({poll.votesB})</span>
     </div>
   </div>
@@ -58,5 +62,21 @@
   span {
     display: inline-block;
     padding: 16px 24px;
+  }
+
+  .percent {
+    height: 100%;
+    position: absolute;
+    box-sizing: border-box;
+  }
+
+  .percent-a {
+    border-left: 4px solid #d91b42;
+    background-color: rgba(217, 27, 66, 0.2);
+  }
+
+  .percent-b {
+    border-left: 4px solid #45c496;
+    background-color: rgba(69, 195, 150, 0.2);
   }
 </style>
