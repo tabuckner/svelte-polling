@@ -2,6 +2,7 @@
   import PollStore from "../stores/PollStore";
   import { PollModel } from "../models/poll.model";
   import Card from "../shared/Card.svelte";
+  import Button from "../shared/Button.svelte";
 
   export let poll: PollModel;
 
@@ -28,6 +29,12 @@
       return [...nextPolls];
     });
   };
+
+  const onDelete = (id: number) => {
+    PollStore.update((currentPolls) =>
+      currentPolls.filter((poll) => poll.id !== id)
+    );
+  };
 </script>
 
 <Card>
@@ -41,6 +48,9 @@
     <div class="answer" on:click={() => onClickAnswer("b", poll.id)}>
       <div class="percent percent-b" style="width: {widths.b}%" />
       <span>{poll.answerB} ({poll.votesB})</span>
+    </div>
+    <div class="delete">
+      <Button flat={true} on:click={() => onDelete(poll.id)}>Delete</Button>
     </div>
   </div>
 </Card>
@@ -89,5 +99,10 @@
   .percent-b {
     border-left: 4px solid #45c496;
     background-color: rgba(69, 195, 150, 0.2);
+  }
+
+  .delete {
+    margin-top: 32px;
+    text-align: center;
   }
 </style>
